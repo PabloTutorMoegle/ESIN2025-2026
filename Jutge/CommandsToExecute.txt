@@ -1,0 +1,7 @@
+Commands to execute:
+
+cat solution.cc main.cc > todo.cc 
+g++ -Wall -o todo.exe todo.cc
+./todo.exe
+./todo.exe < sampleX.inp
+./todo.exe < sampleX.inp | diff - sampleX.cor

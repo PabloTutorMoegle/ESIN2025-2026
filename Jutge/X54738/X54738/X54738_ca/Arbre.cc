@@ -16,20 +16,20 @@ class Arbre {
         ~Arbre () throw();
         // Col·loca l’Arbre donat com a primer fill de l’arrel de l’arbre sobre el que s’aplica el
         //m`etode i l’arbre a queda invalidat; despr ́es de fer b.afegir fill(a), a no  ́es un arbre v`alid.
-        void afegir fill (Arbre<T> &a);
+        void afegir_fill (Arbre<T> &a);
         static const int ArbreInvalid = 400;
         // Comprova que el contingut de cada node coincideix amb el seu grau
         bool es_arbre_compta_graus ();
     private:
-        Arbre (): arrel (NULL) {};
+        Arbre (): _arrel (NULL) {};
         struct node {
             T info ;
             node* primf ;
             node* seggerm;
         };
-        node* arrel ;
-        static node* copia arbre (node* p );
-        static void destrueix arbre (node* p) throw();
+        node* _arrel ;
+        static node* copia_arbre (node* p );
+        static void destrueix_arbre (node* p) throw();
         bool es_arbre_compta_graus (node* p);
 };
 // Aquí va la implementació del m`etode es arbre compta graus
@@ -37,27 +37,29 @@ class Arbre {
 template <typename T>
 bool Arbre<T>::es_arbre_compta_graus (node* p)
 {
-    if (p->primf == nullptr)
+    bool res = true;
+    if (p == nullptr)
     {
-        return true;
+        return res;
     }
 
     int grau = 0;
-    node* current = p->primf->seggerm;
+    node* current = p->primf;
 
-    while(current != nullptr)
+    while(current != nullptr && res)
     {
-        es_arbre_compta_graus(current);
+        res = es_arbre_compta_graus(current);
         grau++;
         current = current->seggerm;
     }
     
-    return p->primf == grau;
+    if (p->info != grau) res = false;
+    return res;
 }
 
 template <typename T>
 bool Arbre<T>::es_arbre_compta_graus () 
 {
-    if (arrel == nullptr) return true;
-    else return es_arbre_compta_graus (arrel);
+    if (_arrel == nullptr) return true;
+    else return es_arbre_compta_graus (_arrel);
 }
