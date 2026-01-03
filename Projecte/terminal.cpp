@@ -1,4 +1,5 @@
 #include "terminal.hpp"
+#include "terminal.rep"
 
 // Constructora. Crea una terminal buida amb n fileres de m places cadascuna, i una
 // alçada màxima d’apilament h; a més fixa l’estratègia d’inserció i retirada dels contenidors respecte el paràmetre st. Genera un error amb codi NumFileresIncorr,
