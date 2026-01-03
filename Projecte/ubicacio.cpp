@@ -3,7 +3,7 @@
 
 // Constructora. Crea la ubicació <i, j, k>. Genera un error amb codi UbicacioIncorrecta si < i, j, k > no pertany a {< u, v, w > |u ≥ 0 ∨ v ≥ 0 ∨ w ≥ 0} o a
 // {< −1, 0, 0 >, < −1, −1, −1 >}.
-ubicacio(int i, int j, int k)
+ubicacio::ubicacio(int i, int j, int k)
 {
     if (!((i >= 0) || (j >= 0) || (k >= 0) || ( (i == -1) && (j == 0) && (k == 0) ) || ( (i == -1) && (j == -1) && (k == -1) )))
         esin::error(UbicacioIncorrecta);
@@ -12,13 +12,13 @@ ubicacio(int i, int j, int k)
     this.pis = k;
 }
 // Constructora per còpia, assignació i destructora.
-ubicacio(const ubicacio& u)
+ubicacio::ubicacio(const ubicacio& u)
 {
     this.fil = u.fil;
     this.placa = u.placa;
     this.pis = u.pis;
 }
-ubicacio& operator=(const ubicacio& u)
+ubicacio& ubicacio::operator=(const ubicacio& u)
 {
     if (this != &u) {
         this.fil = u.fil;
@@ -27,20 +27,20 @@ ubicacio& operator=(const ubicacio& u)
     }
     return *this;
 }
-~ubicacio() noexcept
+ubicacio::~ubicacio() noexcept
 {
 
 }
 // Consultors. Retornen respectivament el primer, segon i tercer component de la ubicació.
-int filera() const noexcept
+int ubicacio::filera() const noexcept
 {
     return this.fil;
 }
-int placa() const noexcept
+int ubicacio::placa() const noexcept
 {
     return this.placa;
 }
-int pis() const noexcept
+int ubicacio::pis() const noexcept
 {
     return this.pis;
 }
@@ -50,17 +50,17 @@ int pis() const noexcept
 // són iguals i la plaça del paràmetre implícit és més petita que la d’u, o si les fileres i
 // les places coincideixen i el pis del paràmetre implícit és més petit que el d’u. La resta
 // d’operadors es defineixen consistentment respecte <.
-bool operator==(const ubicacio &u) const noexcept
+bool ubicacio::operator==(const ubicacio &u) const noexcept
 {
     if ( (this.fil == u.fil) && (this.placa == u.placa) && (this.pis == u.pis) )
         return true;
     return false;
 }
-bool operator!=(const ubicacio &u) const noexcept
+bool ubicacio::operator!=(const ubicacio &u) const noexcept
 {
     return !(*this == u);
 }
-bool operator<(const ubicacio &u) const noexcept
+bool ubicacio::operator<(const ubicacio &u) const noexcept
 {
     if (this.fil < u.fil)
         return true;
@@ -81,15 +81,15 @@ bool operator<(const ubicacio &u) const noexcept
     
     return false;
 }
-bool operator<=(const ubicacio &u) const noexcept
+bool ubicacio::operator<=(const ubicacio &u) const noexcept
 {
     return (*this < u) || (*this == u);
 }
-bool operator>(const ubicacio &u) const noexcept
+bool ubicacio::operator>(const ubicacio &u) const noexcept
 {
     return !(*this <= u);
 }
-bool operator>=(const ubicacio &u) const noexcept
+bool ubicacio::operator>=(const ubicacio &u) const noexcept
 {
     return !(*this < u);
 }

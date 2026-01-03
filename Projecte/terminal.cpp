@@ -4,7 +4,7 @@
 // alçada màxima d’apilament h; a més fixa l’estratègia d’inserció i retirada dels contenidors respecte el paràmetre st. Genera un error amb codi NumFileresIncorr,
 // NumPlacesIncorr o AlcadaMaxIncorr si n = 0, m = 0, h = 0, h > HMAX o un
 // error amb codi EstrategiaIncorr si st no pertany a {FIRST_FIT, LLIURE}.
-terminal(nat n, nat m, nat h, estrategia st)
+terminal::terminal(nat n, nat m, nat h, estrategia st)
 {
     if(n == 0) throw error(NumFileresIncorr);
     if(m == 0) throw error(NumPlacesIncorr);
@@ -18,14 +18,14 @@ terminal(nat n, nat m, nat h, estrategia st)
     this.st = st;
 }
 // Constructora per còpia, assignació i destructora.
-terminal(const terminal& b)
+terminal::terminal(const terminal& b)
 {
     this.n = b.n;
     this.m = b.m;
     this.h = b.h;
     this.st = b.st;
 }
-terminal& operator=(const terminal& b)
+terminal& terminal::operator=(const terminal& b)
 {
     if(this != &b) {
         this.n = b.n;
@@ -35,7 +35,7 @@ terminal& operator=(const terminal& b)
     }
     return *this;
 }
-~terminal() noexcept
+terminal::~terminal() noexcept
 {
 
 }
@@ -44,7 +44,7 @@ terminal& operator=(const terminal& b)
 // l’àrea d’emmagatzematge. En aquest cas es mouran els contenidors de l’àrea d’espera a l’àrea d’emmagatzematge seguint l’ordre que indiqui l’estratègia que s’està
 // usant. Finalment, genera un error amb codi MatriculaDuplicada si ja existís a la
 // terminal un contenidor amb una matrícula idèntica que la del contenidor c.
-void insereix_contenidor(const contenidor &c)
+void terminal::insereix_contenidor(const contenidor &c)
 {
     // Check de si el contenedor ya existe
     if (exists(c.matricula())) {
@@ -72,7 +72,7 @@ void insereix_contenidor(const contenidor &c)
 // seguint l’ordre que indiqui l’estratègia que s’està usant. Genera un error amb codi
 // MatriculaInexistent si a la terminal no hi ha cap contenidor la matrícula del qual
 // sigui igual a m.
-void retira_contenidor(const string &m)
+void terminal::retira_contenidor(const string &m)
 {
     // Check de si el contenedor existe
     if (!exists(m)) {
@@ -94,7 +94,7 @@ void retira_contenidor(const string &m)
 // tingui una matrícula igual a m retorna la ubicació <-1, -1, -1>. Cal recordar que si
 // un contenidor té més de 10 peus, la seva ubicació correspon a la plaça que tingui el
 // número de plaça més petit.
-ubicacio on(const string &m) const noexcept
+ubicacio terminal::on(const string &m) const noexcept
 {
     // Check if container is in waiting area
     if (is_in_waiting_area(m)) {
@@ -120,7 +120,7 @@ ubicacio on(const string &m) const noexcept
 // Retorna la longitud del contenidor la matrícula del qual és igual a m. Genera un error
 // amb codi MatriculaInexistent si no existeix un contenidor a la terminal la matrícula
 // del qual sigui igual a m.
-nat longitud(const string &m) const
+nat terminal::longitud(const string &m) const
 {
     // Check if container exists
     if (!exists(m)) {
@@ -149,7 +149,7 @@ nat longitud(const string &m) const
 // una ubicació vàlida de l’àrea d’emmagatzematge. Cal observar que si m, obtinguda
 // amb t.contenidor_ocupa(u, m), és una matrícula (no la cadena buida) pot succeir que u != t.on(m), ja que un contenidor pot ocupar diverses places i la seva
 // ubicació es correspon amb la de la plaça ocupada amb número de plaça més baix.
-void contenidor_ocupa(const ubicacio &u, string &m) const
+void terminal::contenidor_ocupa(const ubicacio &u, string &m) const
 {
     nat i = u.fila();
     nat j = u.plaça();
@@ -167,7 +167,7 @@ void contenidor_ocupa(const ubicacio &u, string &m) const
 // un contenidor de 10 peus, però no un de més llarg. Per exemple, la filera de la figura
 // 1 de l’enunciat contribuirà amb 7 unitats a la fragmentació total (corresponen a les
 // ubicacions <f, 0, 1>, <f, 1, 2>, <f, 2, 1>, <f, 7, 1>, <f, 8, 0>, <f, 9, 1> i <f, 10, 0>).
-nat fragmentacio() const noexcept
+nat terminal::fragmentacio() const noexcept
 {
     nat fragmentation_count = 0;
 
@@ -200,13 +200,13 @@ nat fragmentacio() const noexcept
 // de grua per inserir o retirar directament un contenidor de l’àrea d’emmagatzematge.
 // En canvi no requereix cap operació de grua inserir o retirar directament un contenidor
 // de l’àrea d’espera.
-nat ops_grua() const noexcept
+nat terminal::ops_grua() const noexcept
 {
     return ops_grua_count;
 }
 // Retorna la llista de les matrícules de tots els contenidors de l’àrea d’espera de la
 // terminal, en ordre alfabètic creixent.
-void area_espera(list<string> &l) const noexcept
+void terminal::area_espera(list<string> &l) const noexcept
 {
     // Copy waiting area to a temporary list
     list<string> temp_list;
@@ -223,22 +223,22 @@ void area_espera(list<string> &l) const noexcept
     l = temp_list;
 }
 // Retorna el número de fileres de la terminal.
-nat num_fileres() const noexcept
+nat terminal::num_fileres() const noexcept
 {
     return n;
 }
 // Retorna el número de places per filera de la terminal.
-nat num_places() const noexcept
+nat terminal::num_places() const noexcept
 {
     return m;
 }
 // Retorna l’alçada màxima d’apilament de la terminal.
-nat num_pisos() const noexcept
+nat terminal::num_pisos() const noexcept
 {
     return h;
 }
 // Retorna l’estratègia d’inserció i retirada de contenidors de la terminal.
-estrategia quina_estrategia() const noexcept
+estrategia terminal::quina_estrategia() const noexcept
 {
     return st;
 }
