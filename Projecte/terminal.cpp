@@ -1,6 +1,7 @@
 #include "terminal.hpp"
 #include "terminal.rep"
 
+using namespace std;
 // Constructora. Crea una terminal buida amb n fileres de m places cadascuna, i una
 // alçada màxima d’apilament h; a més fixa l’estratègia d’inserció i retirada dels contenidors respecte el paràmetre st. Genera un error amb codi NumFileresIncorr,
 // NumPlacesIncorr o AlcadaMaxIncorr si n = 0, m = 0, h = 0, h > HMAX o un
@@ -13,26 +14,26 @@ terminal::terminal(nat n, nat m, nat h, estrategia st)
     if(st != estrategia::FIRST_FIT && st != estrategia::LLIURE) {
         throw error(EstrategiaIncorr);
     }
-    this.n = n;
-    this.m = m;
-    this.h = h;
-    this.st = st;
+    nf = n;
+    npf = m;
+    h = h;
+    st = st;
 }
 // Constructora per còpia, assignació i destructora.
 terminal::terminal(const terminal& b)
 {
-    this.n = b.n;
-    this.m = b.m;
-    this.h = b.h;
-    this.st = b.st;
+    nf = b.nf;
+    npf = b.npf;
+    h = b.h;
+    st = b.st;
 }
 terminal& terminal::operator=(const terminal& b)
 {
     if(this != &b) {
-        this.n = b.n;
-        this.m = b.m;
-        this.h = b.h;
-        this.st = b.st;
+        nf = b.nf;
+        npf = b.npf;
+        h = b.h;
+        st = b.st;
     }
     return *this;
 }
@@ -63,11 +64,11 @@ void terminal::insereix_contenidor(const contenidor &c)
 
     ops_grua_count++;
 }
-// Retira de la terminal el contenidor c la matrícula del qual és igual a m. Aquest contenidor pot estar a l’àrea d’emmagatzematge o a l’àrea d’espera. Si el contenidor
+// Retira de la terminal el contenidor c la matrícula del qual és igual a npf. Aquest contenidor pot estar a l’àrea d’emmagatzematge o a l’àrea d’espera. Si el contenidor
 // estigués a l’àrea d’emmagatzematge llavors s’hauran de moure a l’àrea d’espera tots
 // els contenidors que siguin necessaris per netejar la part superior de c, s’hauran de
 // retirar possiblement diversos contenidors, començant pel contenidor sense cap altre
-// a sobre amb el número de plaça més baix (més a l’esquerra) i així successivament
+// a sobre amb el número de placa més baix (més a l’esquerra) i així successivament
 // (veure exemple amb detall a la subsecció 2.1). Un cop s’hagi eliminat el contenidor
 // indicat, s’intenta moure contenidors de l’àrea d’espera a l’àrea d’emmagatzematge,
 // seguint l’ordre que indiqui l’estratègia que s’està usant. Genera un error amb codi
@@ -93,8 +94,8 @@ void terminal::retira_contenidor(const string &m)
 // contenidor està a l’àrea d’emmagatzematge de la terminal. Si el contenidor està
 // a l’àrea d’espera retorna la ubicació <-1, 0, 0>. Si no existeix cap contenidor que
 // tingui una matrícula igual a m retorna la ubicació <-1, -1, -1>. Cal recordar que si
-// un contenidor té més de 10 peus, la seva ubicació correspon a la plaça que tingui el
-// número de plaça més petit.
+// un contenidor té més de 10 peus, la seva ubicació correspon a la placa que tingui el
+// número de placa més petit.
 ubicacio terminal::on(const string &m) const noexcept
 {
     // Check if container is in waiting area
@@ -103,8 +104,8 @@ ubicacio terminal::on(const string &m) const noexcept
     }
 
     // Search in storage area
-    for (nat i = 0; i < n; i++) {
-        for (nat j = 0; j < m; j++) {
+    for (nat i = 0; i < nf; i++) {
+        for (nat j = 0; j < npf; j++) {
             for (nat k = 0; k < h; k++) {
                 string mat;
                 contenidor_ocupa(ubicacio(i, j, k), mat);
@@ -127,10 +128,10 @@ nat terminal::longitud(const string &m) const
     if (!exists(m)) {
         throw error(MatriculaInexistent);
     }
-
+    //REVISAR ESTO TA MAL FIJO 
     // Search in storage area
-    for (nat i = 0; i < n; i++) {
-        for (nat j = 0; j < m; j++) {
+    for (nat i = 0; i < nf; i++) {
+        for (nat j = 0; j < npf; j++) {
             for (nat k = 0; k < h; k++) {
                 string mat;
                 contenidor_ocupa(ubicacio(i, j, k), mat);
@@ -146,18 +147,18 @@ nat terminal::longitud(const string &m) const
 }
 // Retorna la matrícula del contenidor que ocupa la ubicació u =< i, j, k > o la cadena
 // buida si la ubicació està buida. Genera un error amb codi UbicacioNoMagatzem si
-// i < 0, i >= n, j < 0, j >= m, k < 0 o k >= h, o sigui si < i, j, k > no identifica
+// i < 0, i >= nf, j < 0, j >= m, k < 0 o k >= h, o sigui si < i, j, k > no identifica
 // una ubicació vàlida de l’àrea d’emmagatzematge. Cal observar que si m, obtinguda
 // amb t.contenidor_ocupa(u, m), és una matrícula (no la cadena buida) pot succeir que u != t.on(m), ja que un contenidor pot ocupar diverses places i la seva
-// ubicació es correspon amb la de la plaça ocupada amb número de plaça més baix.
+// ubicació es correspon amb la de la placa ocupada amb número de placa més baix.
 void terminal::contenidor_ocupa(const ubicacio &u, string &m) const
 {
-    nat i = u.fila();
-    nat j = u.plaça();
-    nat k = u.altura();
+    nat i = u.filera();
+    nat j = u.placa();
+    nat k = u.pis();
 
     // Check if the location is valid
-    if (i < 0 || i >= n || j < 0 || j >= m || k < 0 || k >= h) {
+    if (i < 0 || i >= nf || j < 0 || j >= npf || k < 0 || k >= h) {
         throw error(UbicacioNoMagatzem);
     }
 
@@ -172,8 +173,8 @@ nat terminal::fragmentacio() const noexcept
 {
     nat fragmentation_count = 0;
 
-    for (nat i = 0; i < n; i++) {
-        for (nat j = 0; j < m; j++) {
+    for (nat i = 0; i < nf; i++) {
+        for (nat j = 0; j < npf; j++) {
             nat max_height = 0;
             for (nat k = 0; k < h; k++) {
                 string mat;
@@ -211,7 +212,7 @@ void terminal::area_espera(list<string> &l) const noexcept
 {
     // Copy waiting area to a temporary list
     list<string> temp_list;
-    std::queue<contenidor> temp_queue = waiting_area;
+    queue<contenidor> temp_queue = waiting_area;
     while (!temp_queue.empty()) {
         temp_list.push_back(temp_queue.front().matricula());
         temp_queue.pop();
@@ -226,12 +227,12 @@ void terminal::area_espera(list<string> &l) const noexcept
 // Retorna el número de fileres de la terminal.
 nat terminal::num_fileres() const noexcept
 {
-    return n;
+    return nf;
 }
 // Retorna el número de places per filera de la terminal.
 nat terminal::num_places() const noexcept
 {
-    return m;
+    return npf;
 }
 // Retorna l’alçada màxima d’apilament de la terminal.
 nat terminal::num_pisos() const noexcept
@@ -240,6 +241,6 @@ nat terminal::num_pisos() const noexcept
 }
 // Retorna l’estratègia d’inserció i retirada de contenidors de la terminal.
 estrategia terminal::quina_estrategia() const noexcept
-{
+{   //estrategia FRANCHESCCO no neccecita ninguna estrategia, es el mas rapido de tuta Italia FIAAAAAAAUM!!
     return st;
 }

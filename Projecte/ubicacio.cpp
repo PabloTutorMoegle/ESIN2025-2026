@@ -7,23 +7,23 @@ ubicacio::ubicacio(int i, int j, int k)
 {
     if (!((i >= 0) || (j >= 0) || (k >= 0) || ( (i == -1) && (j == 0) && (k == 0) ) || ( (i == -1) && (j == -1) && (k == -1) )))
         esin::error(UbicacioIncorrecta);
-    this.fil = i;
-    this.placa = j;
-    this.pis = k;
+    fil = i;
+    plaza = j;
+    piso = k;
 }
 // Constructora per còpia, assignació i destructora.
 ubicacio::ubicacio(const ubicacio& u)
 {
-    this.fil = u.fil;
-    this.placa = u.placa;
-    this.pis = u.pis;
+    fil = u.fil;
+    plaza = u.plaza;
+    piso = u.piso;
 }
 ubicacio& ubicacio::operator=(const ubicacio& u)
 {
     if (this != &u) {
-        this.fil = u.fil;
-        this.placa = u.placa;
-        this.pis = u.pis;
+        fil = u.fil;
+        plaza = u.plaza;
+        piso = u.piso;
     }
     return *this;
 }
@@ -34,25 +34,25 @@ ubicacio::~ubicacio() noexcept
 // Consultors. Retornen respectivament el primer, segon i tercer component de la ubicació.
 int ubicacio::filera() const noexcept
 {
-    return this.fil;
+    return fil;
 }
 int ubicacio::placa() const noexcept
 {
-    return this.placa;
+    return plaza;
 }
 int ubicacio::pis() const noexcept
 {
-    return this.pis;
+    return piso;
 }
 // Operadors de comparació. L’operador d’igualtat retorna cert si i només si les dues
-// ubicacions tenen la mateixa filera, plaça i pis. L’operador menor retorna cert si i
+// ubicacions tenen la mateixa filera, plaça i piso. L’operador menor retorna cert si i
 // només si la filera del paràmetre implícit és més petit que la d’u, o si les dues fileres
 // són iguals i la plaça del paràmetre implícit és més petita que la d’u, o si les fileres i
-// les places coincideixen i el pis del paràmetre implícit és més petit que el d’u. La resta
+// les places coincideixen i el piso del paràmetre implícit és més petit que el d’u. La resta
 // d’operadors es defineixen consistentment respecte <.
 bool ubicacio::operator==(const ubicacio &u) const noexcept
 {
-    if ( (this.fil == u.fil) && (this.placa == u.placa) && (this.pis == u.pis) )
+    if ( (fil == u.fil) && (plaza == u.plaza) && (piso == u.piso) )
         return true;
     return false;
 }
@@ -62,13 +62,13 @@ bool ubicacio::operator!=(const ubicacio &u) const noexcept
 }
 bool ubicacio::operator<(const ubicacio &u) const noexcept
 {
-    if (this.fil < u.fil)
+    if (fil < u.fil)
         return true;
-    else if (this.fil == u.fil) {
-        if (this.placa < u.placa)
+    else if (fil == u.fil) {
+        if (plaza < u.plaza)
             return true;
-        else if (this.placa == u.placa) {
-            if (this.pis < u.pis)
+        else if (plaza == u.plaza) {
+            if (piso < u.piso)
                 return true;
             else
                 return false;
