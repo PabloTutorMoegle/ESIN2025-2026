@@ -1,7 +1,7 @@
 #include "terminal.hpp"
 #include "terminal.rep"
 
-using namespace std;
+using namespace std; 
 // Constructora. Crea una terminal buida amb n fileres de m places cadascuna, i una
 // alçada màxima d’apilament h; a més fixa l’estratègia d’inserció i retirada dels contenidors respecte el paràmetre st. Genera un error amb codi NumFileresIncorr,
 // NumPlacesIncorr o AlcadaMaxIncorr si n = 0, m = 0, h = 0, h > HMAX o un
