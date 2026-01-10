@@ -1,64 +1,23 @@
-#include <queue>
-#include <vector>
-#include "terminal.hpp"
+/* Representació:
+   - _n, _m, _h: Dimensions (fileres, places, pisos).
+   - _st: Estratègia (FIRST_FIT o LLIURE). 
+   - _graella: Matriu 3D de strings [filera][plaça][pis] que guarda la matrícula.
+   - _espera: Llista de matrícules en espera. 
+   - _on: Catàleg per saber la ubicació <i,j,k> de cada matrícula. 
+   - _conts: Catàleg per guardar l'objecte contenidor (longitud). 
+   - _ops_grua: Comptador d'operacions de grua.
+*/
 
-nat nf;  // número de fileres
-nat npf;  // número de places per filera
-nat h;  // alçada màxima d'apilament
-estrategia st;  // estratègia d'inserció i retirada
-nat ops_grua_count = 0;  // contador de operacions de grua
+nat _n, _m, _h;
+estrategia _st;
+string*** _graella; 
+list<string> _espera;
+cataleg<ubicacio> _on;
+cataleg<contenidor> _conts;
+nat _ops_grua;
 
-// Estructura per emmagatzemar els contenidors a l'àrea d'emmagatzematge
-// matriz[filera][placa][pis] = contenidor o contenidor buit
-// Usem un mapa para simplificar l'accés i la cerca
-std::map<std::string, ubicacio> storage_map;  // mapeja matrícula a ubicació
-std::map<ubicacio, contenidor> storage_grid;  // mapeja ubicació a contenidor
-
-// Àrea d'espera per als contenidors
-queue<contenidor> waiting_area;
-
-// Helper methods (mètodes privats)
-
-// Comprova si existeix un contenidor amb la matrícula m a la terminal
-bool exists(const string &m);
-
-// Comprova si un contenidor està a l'àrea d'espera
-bool is_in_waiting_area(const string &m);
-
-// Intenta col·locar un contenidor a l'àrea d'emmagatzematge
-// Retorna true si s'ha colocat correctament, false si no hi ha espai
-bool place_in_storage(const contenidor &c);
-
-// Intenta retirar un contenidor de l'àrea d'emmagatzematge
-// Retorna true si s'ha retirat correctament, false si no està a l'emmagatzematge
-bool remove_from_storage(const string &m);
-
-// Retira un contenidor de l'àrea d'espera
-void remove_from_waiting_area(const string &m);
-
-// Intenta moure contenidors de l'àrea d'espera a l'emmagatzematge
-void move_from_waiting_area();
-
-// Obté la longitud d'un contenidor per la seva matrícula
-nat get_container_length(const string &m);
-
-// Obté la longitud d'un contenidor de l'àrea d'espera
-nat get_container_length_from_waiting_area(const string &m);
-
-// Obté el contenidor a una ubicació específica
-string get_container_at_location(const ubicacio &u);
-
-// Comprova si hi ha espai per a un contenidor en una posició
-bool has_space_for_container(const contenidor &c, nat filera, nat placa);
-
-// Obté les ubicacions ocupades per un contenidor donada la seva matrícula
-std::vector<ubicacio> get_container_locations(const string &m);
-
-// Comparador per a ubicacions (necessari per usar a std::map)
-struct UbicacioComparator {
-    bool operator()(const ubicacio &a, const ubicacio &b) const {
-        if (a.filera() != b.filera()) return a.filera() < b.filera();
-        if (a.placa() != b.placa()) return a.placa() < b.placa();
-        return a.pis() < b.pis();
-    }
-};
+// Mètodes auxiliars privats
+bool buscar_lloc(const contenidor &c, ubicacio &u) const;
+bool es_pot_posar(nat f, nat p, nat k, nat ll) const;
+void gestionar_espera();
+void moure_a_espera(const string &m);

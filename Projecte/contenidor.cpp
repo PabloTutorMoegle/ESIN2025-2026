@@ -1,79 +1,90 @@
 #include "contenidor.hpp"
-#include "contenidor.rep"
 
-// Constructora. Crea un contenidor amb matrícula m i longitud l. Es produeix un error
-// amb codi MatriculaIncorrecta si m no és una seqüència de un o més caràcters,
-// formada exclusivament per lletres majúscules i dígits. Es produeix un error amb codi
-// LongitudIncorrecta si l no pertany a 10, 20, 30.
-contenidor::contenidor(const string &m, nat l)
-{
-    if(m.empty()) throw error(MatriculaIncorrecta);
-    for(char c : m) {
-        if(!((c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))) {
-            throw error(MatriculaIncorrecta);
+/* Constructora. 
+   Pre: Cert.
+   Post: Crea un contenidor amb matrícula m i longitud l.
+   Llença MatriculaIncorrecta si m és buida o conté caràcters no alfanumèrics (A-Z, 0-9).
+   Llença LongitudIncorrecta si l no és 10, 20 o 30.
+   Cost: O(M) on M és la longitud de la matrícula (pel recorregut de validació). */
+contenidor::contenidor(const string &m, nat l) {
+    if (m.empty()) {
+        throw esin::error(MatriculaIncorrecta);
+    }
+    
+    for (char c : m) {
+        if (!((c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))) {
+            throw esin::error(MatriculaIncorrecta);
         }
     }
-    if(l != 10 && l != 20 && l != 30) {
-        throw error(LongitudIncorrecta);
+    
+    if (l != 10 && l != 20 && l != 30) {
+        throw esin::error(LongitudIncorrecta);
     }
-    this->m = m;
-    this->l = l;
+    
+    _matr = m;
+    _long = l;
 }
-// Constructora per còpia, assignació i destructora.
-contenidor::contenidor(const contenidor &u)
-{
-    m = u.m;
-    l = u.l;
+
+/* Constructora per còpia.
+   Cost: O(M) per la còpia de l'string. */
+contenidor::contenidor(const contenidor &u) {
+    _matr = u._matr;
+    _long = u._long;
 }
-contenidor& contenidor::operator=(const contenidor &u)
-{
-    if(this != &u) {
-        m = u.m;
-        l = u.l;
+
+/* Operador d'assignació.
+   Cost: O(M) per la còpia de l'string. */
+contenidor& contenidor::operator=(const contenidor &u) {
+    if (this != &u) {
+        _matr = u._matr;
+        _long = u._long;
     }
     return *this;
 }
-contenidor::~contenidor() noexcept
-{
 
+/* Destructora.
+   Cost: O(1) (l'string s'allibera automàticament). */
+contenidor::~contenidor() noexcept {}
+
+/* Consultors.
+   Cost: O(1) (el retorn de l'string per valor pot ser O(M), però molts compiladors 
+   apliquen optimitzacions de moviment). */
+nat contenidor::longitud() const noexcept {
+    return _long;
 }
-// Consultors. Retornen respectivament la longitud i la matrícula del contenidor.
-nat contenidor::longitud() const noexcept
-{
-    return l;
+
+string contenidor::matricula() const noexcept {
+    return _matr;
 }
-string contenidor::matricula() const noexcept
-{
-    return m;
+
+/* Operadors de comparació.
+   Igualtat: Cert si matrícula i longitud coincideixen.
+   Cost: O(M). */
+bool contenidor::operator==(const contenidor &c) const noexcept {
+    return (_matr == c._matr) && (_long == c._long);
 }
-// Operadors de comparació. L’operador d’igualtat retorna cert si i només si els dos
-// contenidors contenen la mateixa matrícula i longitud. L’operador menor retorna cert
-// si i només si la matrícula del paràmetre implícit és més petit en ordre alfabètic que
-// la de c o si les dues matrícules són iguals i la longitud del paràmetre implícit és més
-// petita que la de c. La resta d’operadors es defineixen consistentment respecte a <.
-bool contenidor::operator==(const contenidor &c) const noexcept
-{
-    return (m == c.m) && (l == c.l);
-}
-bool contenidor::operator!=(const contenidor &c) const noexcept
-{
+
+bool contenidor::operator!=(const contenidor &c) const noexcept {
     return !(*this == c);
 }
-bool contenidor::operator<(const contenidor &c) const noexcept
-{
-    if(m < c.m) return true;
-    if(m == c.m && l < c.l) return true;
-    return false;
+
+/* Menor: Ordre alfabètic de matrícula, i en cas d'empat, per longitud.
+   Cost: O(M). */
+bool contenidor::operator<(const contenidor &c) const noexcept {
+    if (_matr != c._matr) {
+        return _matr < c._matr;
+    }
+    return _long < c._long;
 }
-bool contenidor::operator<=(const contenidor &c) const noexcept
-{
-    return (*this < c) || (*this == c);
+
+bool contenidor::operator<=(const contenidor &c) const noexcept {
+    return !(c < *this);
 }
-bool contenidor::operator>(const contenidor &c) const noexcept
-{
-    return !(*this <= c);
+
+bool contenidor::operator>(const contenidor &c) const noexcept {
+    return c < *this;
 }
-bool contenidor::operator>=(const contenidor &c) const noexcept
-{
+
+bool contenidor::operator>=(const contenidor &c) const noexcept {
     return !(*this < c);
 }

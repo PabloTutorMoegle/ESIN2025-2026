@@ -1,2 +1,8 @@
-string m;
-nat l;
+/* Representació: 
+   - Un string (_matr) per emmagatzemar la matrícula del contenidor.
+   - Un natural (_long) de tipus 'nat' (unsigned int) per la longitud en peus.
+
+*/
+
+string _matr;
+nat _long;

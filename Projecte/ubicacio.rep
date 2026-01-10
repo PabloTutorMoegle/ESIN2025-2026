@@ -1,3 +1,7 @@
+/* Representació: Tres variables de tipus enter (int) per emmagatzemar la 
+   filera (fil), la plaça (placa) i el pis (pis) de la ubicació[cite: 218].
+*/
+
 int fil;
-int plaza;
-int piso;
+int placa; 
+int pis;   

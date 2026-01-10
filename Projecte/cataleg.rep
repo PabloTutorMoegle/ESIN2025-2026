@@ -1,0 +1,34 @@
+/* Representació: 
+   S'ha implementat una Taula de Dispersió (Hash Table) amb encadenament 
+   separat per gestionar les col·lisions. 
+   - 'struct node': Estructura per a les llistes de sinònims amb clau (string), 
+     valor (Valor) i un punter al següent node. 
+   - '_taula': Vector de punters a 'node' que conforma l'esquelet de la taula.
+   - '_M': Mida actual de la taula. 
+   - '_quants': Comptador d'elements inserits. 
+
+   Justificació:
+   S'ha escollit la Taula de Dispersió perquè ofereix un cost mitjà d'accés, 
+   inserció i eliminació d'O(1), superant l'O(log n) dels arbres cercadors.
+   L'encadenament separat facilita la gestió de col·lisions sense els problemes 
+   d'aglomeració de l'adreçament obert. S'inclou un mecanisme de redispersió 
+   dinàmica per mantenir el factor de càrrega baix i garantir l'eficiència. 
+   
+   Cost en espai: O(M + N), on M és la mida de la taula i N el nombre d'elements.
+*/
+
+struct node {
+    string _k;
+    Valor _v;
+    node* _seg;
+};
+
+node** _taula; 
+nat _M;        
+nat _quants;
+
+long h(const string &k) const;
+void copia(const cataleg &c);
+static void esborra_nodes(node* p);
+void redispersio();
+float factor_de_carrega() const;

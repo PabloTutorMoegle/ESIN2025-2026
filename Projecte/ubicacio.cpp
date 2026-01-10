@@ -1,95 +1,81 @@
 #include "ubicacio.hpp"
-#include "ubicacio.rep"
 
-// Constructora. Crea la ubicació <i, j, k>. Genera un error amb codi UbicacioIncorrecta si < i, j, k > no pertany a {< u, v, w > |u ≥ 0 ∨ v ≥ 0 ∨ w ≥ 0} o a
-// {< −1, 0, 0 >, < −1, −1, −1 >}.
-ubicacio::ubicacio(int i, int j, int k)
-{
-    if (!((i >= 0) || (j >= 0) || (k >= 0) || ( (i == -1) && (j == 0) && (k == 0) ) || ( (i == -1) && (j == -1) && (k == -1) )))
-        esin::error(UbicacioIncorrecta);
+/* Constructora. Crea la ubicació <i, j, k>. 
+   Pre: Cert.
+   Post: Crea una ubicació amb filera i, plaça j i pis k. 
+   Llença error UbicacioIncorrecta si les coordenades no són vàlides.
+   Cost: O(1) */
+ubicacio::ubicacio(int i, int j, int k) {
+    bool coords_positives = (i >= 0 && j >= 0 && k >= 0);
+    bool cas_espera = (i == -1 && j == 0 && k == 0); [cite: 219]
+    bool cas_inexistent = (i == -1 && j == -1 && k == -1); [cite: 219]
+
+    if (!(coords_positives || cas_espera || cas_inexistent)) {
+        throw esin::error(UbicacioIncorrecta); [cite: 231]
+    }
+    
     fil = i;
-    plaza = j;
-    piso = k;
+    placa = j;
+    pis = k;
 }
-// Constructora per còpia, assignació i destructora.
-ubicacio::ubicacio(const ubicacio& u)
-{
+
+/* Constructora per còpia.
+   Cost: O(1)*/
+ubicacio::ubicacio(const ubicacio& u) {
     fil = u.fil;
-    plaza = u.plaza;
-    piso = u.piso;
+    placa = u.placa;
+    pis = u.pis;
 }
-ubicacio& ubicacio::operator=(const ubicacio& u)
-{
+
+/* Operador d'assignació.
+   Cost: O(1) */
+ubicacio& ubicacio::operator=(const ubicacio& u) {
     if (this != &u) {
         fil = u.fil;
-        plaza = u.plaza;
-        piso = u.piso;
+        placa = u.placa;
+        pis = u.pis;
     }
     return *this;
 }
-ubicacio::~ubicacio() noexcept
-{
 
+/* Destructora.
+   Cost: O(1)*/
+ubicacio::~ubicacio() noexcept {}
+
+/* Consultors.
+   Cost: O(1) */
+int ubicacio::filera() const noexcept { return fil; }
+int ubicacio::placa() const noexcept { return placa; }
+int ubicacio::pis() const noexcept { return pis; }
+
+/* Operador d'igualtat.
+   Post: Cert si tenen mateixa filera, plaça i pis.
+   Cost: O(1) */
+bool ubicacio::operator==(const ubicacio &u) const noexcept {
+    return (fil == u.fil && placa == u.placa && pis == u.pis);
 }
-// Consultors. Retornen respectivament el primer, segon i tercer component de la ubicació.
-int ubicacio::filera() const noexcept
-{
-    return fil;
-}
-int ubicacio::placa() const noexcept
-{
-    return plaza;
-}
-int ubicacio::pis() const noexcept
-{
-    return piso;
-}
-// Operadors de comparació. L’operador d’igualtat retorna cert si i només si les dues
-// ubicacions tenen la mateixa filera, plaça i piso. L’operador menor retorna cert si i
-// només si la filera del paràmetre implícit és més petit que la d’u, o si les dues fileres
-// són iguals i la plaça del paràmetre implícit és més petita que la d’u, o si les fileres i
-// les places coincideixen i el piso del paràmetre implícit és més petit que el d’u. La resta
-// d’operadors es defineixen consistentment respecte <.
-bool ubicacio::operator==(const ubicacio &u) const noexcept
-{
-    if ( (fil == u.fil) && (plaza == u.plaza) && (piso == u.piso) )
-        return true;
-    return false;
-}
-bool ubicacio::operator!=(const ubicacio &u) const noexcept
-{
+
+bool ubicacio::operator!=(const ubicacio &u) const noexcept {
     return !(*this == u);
 }
-bool ubicacio::operator<(const ubicacio &u) const noexcept
-{
-    if (fil < u.fil)
-        return true;
-    else if (fil == u.fil) {
-        if (plaza < u.plaza)
-            return true;
-        else if (plaza == u.plaza) {
-            if (piso < u.piso)
-                return true;
-            else
-                return false;
-        }
-        else
-            return false;
-    }
-    else
-        return false;
-    
-    return false;
+
+/* Operador menor.
+   Post: Cert si la ubicació és menor segons l'ordre: filera, plaça, pis.
+   Cost: O(1) */
+bool ubicacio::operator<(const ubicacio &u) const noexcept {
+    if (fil != u.fil) return fil < u.fil;
+    if (placa != u.placa) return placa < u.placa;
+    return pis < u.pis;
 }
-bool ubicacio::operator<=(const ubicacio &u) const noexcept
-{
+
+bool ubicacio::operator<=(const ubicacio &u) const noexcept {
     return (*this < u) || (*this == u);
 }
-bool ubicacio::operator>(const ubicacio &u) const noexcept
-{
+
+bool ubicacio::operator>(const ubicacio &u) const noexcept {
     return !(*this <= u);
 }
-bool ubicacio::operator>=(const ubicacio &u) const noexcept
-{
+
+bool ubicacio::operator>=(const ubicacio &u) const noexcept {
     return !(*this < u);
 }
