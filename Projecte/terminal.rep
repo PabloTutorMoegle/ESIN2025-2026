@@ -1,5 +1,6 @@
 #include <queue>
 #include <vector>
+#include "terminal.hpp"
 
 nat nf;  // número de fileres
 nat npf;  // número de places per filera
@@ -14,44 +15,44 @@ std::map<std::string, ubicacio> storage_map;  // mapeja matrícula a ubicació
 std::map<ubicacio, contenidor> storage_grid;  // mapeja ubicació a contenidor
 
 // Àrea d'espera per als contenidors
-std::queue<contenidor> waiting_area;
+queue<contenidor> waiting_area;
 
 // Helper methods (mètodes privats)
 
 // Comprova si existeix un contenidor amb la matrícula m a la terminal
-bool exists(const string &m) const noexcept;
+bool exists(const string &m);
 
 // Comprova si un contenidor està a l'àrea d'espera
-bool is_in_waiting_area(const string &m) const noexcept;
+bool is_in_waiting_area(const string &m);
 
 // Intenta col·locar un contenidor a l'àrea d'emmagatzematge
 // Retorna true si s'ha colocat correctament, false si no hi ha espai
-bool place_in_storage(const contenidor &c) noexcept;
+bool place_in_storage(const contenidor &c);
 
 // Intenta retirar un contenidor de l'àrea d'emmagatzematge
 // Retorna true si s'ha retirat correctament, false si no està a l'emmagatzematge
-bool remove_from_storage(const string &m) noexcept;
+bool remove_from_storage(const string &m);
 
 // Retira un contenidor de l'àrea d'espera
-void remove_from_waiting_area(const string &m) noexcept;
+void remove_from_waiting_area(const string &m);
 
 // Intenta moure contenidors de l'àrea d'espera a l'emmagatzematge
-void move_from_waiting_area() noexcept;
+void move_from_waiting_area();
 
 // Obté la longitud d'un contenidor per la seva matrícula
-nat get_container_length(const string &m) const noexcept;
+nat get_container_length(const string &m);
 
 // Obté la longitud d'un contenidor de l'àrea d'espera
-nat get_container_length_from_waiting_area(const string &m) const noexcept;
+nat get_container_length_from_waiting_area(const string &m);
 
 // Obté el contenidor a una ubicació específica
-string get_container_at_location(const ubicacio &u) const noexcept;
+string get_container_at_location(const ubicacio &u);
 
 // Comprova si hi ha espai per a un contenidor en una posició
-bool has_space_for_container(const contenidor &c, nat filera, nat placa) const noexcept;
+bool has_space_for_container(const contenidor &c, nat filera, nat placa);
 
 // Obté les ubicacions ocupades per un contenidor donada la seva matrícula
-std::vector<ubicacio> get_container_locations(const string &m) const noexcept;
+std::vector<ubicacio> get_container_locations(const string &m);
 
 // Comparador per a ubicacions (necessari per usar a std::map)
 struct UbicacioComparator {
