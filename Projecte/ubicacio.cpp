@@ -1,30 +1,30 @@
 #include "ubicacio.hpp"
 
 /* Constructora. Crea la ubicació <i, j, k>. 
-   Pre: Cert.
-   Post: Crea una ubicació amb filera i, plaça j i pis k. 
-   Llença error UbicacioIncorrecta si les coordenades no són vàlides.
+    Pre: Cert.
+    Post: Crea una ubicació amb filera i, plaça j i piso k. 
+    Llença error UbicacioIncorrecta si les coordenades no són vàlides.
    Cost: O(1) */
 ubicacio::ubicacio(int i, int j, int k) {
     bool coords_positives = (i >= 0 && j >= 0 && k >= 0);
-    bool cas_espera = (i == -1 && j == 0 && k == 0); [cite: 219]
-    bool cas_inexistent = (i == -1 && j == -1 && k == -1); [cite: 219]
+    bool cas_espera = (i == -1 && j == 0 && k == 0); // [cite: 219]
+    bool cas_inexistent = (i == -1 && j == -1 && k == -1); // [cite: 219]
 
     if (!(coords_positives || cas_espera || cas_inexistent)) {
-        throw esin::error(UbicacioIncorrecta); [cite: 231]
+        throw esin::error(UbicacioIncorrecta); // [cite: 231]
     }
     
     fil = i;
-    placa = j;
-    pis = k;
+    plaza = j;
+    piso = k;
 }
 
 /* Constructora per còpia.
-   Cost: O(1)*/
+    Cost: O(1)*/
 ubicacio::ubicacio(const ubicacio& u) {
     fil = u.fil;
-    placa = u.placa;
-    pis = u.pis;
+    plaza = u.plaza;
+    piso = u.piso;
 }
 
 /* Operador d'assignació.
@@ -32,27 +32,27 @@ ubicacio::ubicacio(const ubicacio& u) {
 ubicacio& ubicacio::operator=(const ubicacio& u) {
     if (this != &u) {
         fil = u.fil;
-        placa = u.placa;
-        pis = u.pis;
+        plaza = u.plaza;
+        piso = u.piso;
     }
     return *this;
 }
 
 /* Destructora.
-   Cost: O(1)*/
+    Cost: O(1)*/
 ubicacio::~ubicacio() noexcept {}
 
 /* Consultors.
    Cost: O(1) */
 int ubicacio::filera() const noexcept { return fil; }
-int ubicacio::placa() const noexcept { return placa; }
-int ubicacio::pis() const noexcept { return pis; }
+int ubicacio::placa() const noexcept { return plaza; }
+int ubicacio::pis() const noexcept { return piso; }
 
 /* Operador d'igualtat.
-   Post: Cert si tenen mateixa filera, plaça i pis.
+    Post: Cert si tenen mateixa filera, plaça i piso.
    Cost: O(1) */
 bool ubicacio::operator==(const ubicacio &u) const noexcept {
-    return (fil == u.fil && placa == u.placa && pis == u.pis);
+    return (fil == u.fil && plaza == u.plaza && piso == u.piso);
 }
 
 bool ubicacio::operator!=(const ubicacio &u) const noexcept {
@@ -60,12 +60,12 @@ bool ubicacio::operator!=(const ubicacio &u) const noexcept {
 }
 
 /* Operador menor.
-   Post: Cert si la ubicació és menor segons l'ordre: filera, plaça, pis.
+    Post: Cert si la ubicació és menor segons l'ordre: filera, plaça, piso.
    Cost: O(1) */
 bool ubicacio::operator<(const ubicacio &u) const noexcept {
     if (fil != u.fil) return fil < u.fil;
-    if (placa != u.placa) return placa < u.placa;
-    return pis < u.pis;
+    if (plaza != u.plaza) return plaza < u.plaza;
+    return piso < u.piso;
 }
 
 bool ubicacio::operator<=(const ubicacio &u) const noexcept {

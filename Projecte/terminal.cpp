@@ -1,9 +1,9 @@
 #include "terminal.hpp"
 
 /* Constructora.
-   Pre: n, m, h > 0, h <= HMAX, st pertany a {FIRST_FIT, LLIURE}.
-   Post: Crea una terminal buida amb les dimensions i l'estratègia indicades.
-   Cost: O(N*M*H) per la inicialització de la matriu 3D. */
+    Pre: n, m, h > 0, h <= HMAX, st pertany a {FIRST_FIT, LLIURE}.
+    Post: Crea una terminal buida amb les dimensions i l'estratègia indicades.
+    Cost: O(N*M*H) per la inicialització de la matriu 3D. */
 terminal::terminal(nat n, nat m, nat h, estrategia st) : 
     _n(n), _m(m), _h(h), _st(st), _on(n*m*h), _conts(n*m*h), _ops_grua(0) {
     
@@ -22,8 +22,8 @@ terminal::terminal(nat n, nat m, nat h, estrategia st) :
 }
 
 /* Destructora.
-   Pre: Cert.
-   Post: Allibera la memòria dinàmica de la graella 3D.
+    Pre: Cert.
+    Post: Allibera la memòria dinàmica de la graella 3D.
    Cost: O(N*M). */
 terminal::~terminal() noexcept {
     for (nat i = 0; i < _n; ++i) {
@@ -34,8 +34,8 @@ terminal::~terminal() noexcept {
 }
 
 /* insereix_contenidor.
-   Pre: Cert.
-   Post: Insereix c al magatzem o a l'espera segons l'estratègia.
+    Pre: Cert.
+    Post: Insereix c al magatzem o a l'espera segons l'estratègia.
    Cost: O(N*M*H + E*N*M*H) en el pitjor cas. */
 void terminal::insereix_contenidor(const contenidor &c) {
     if (_conts.existeix(c.matricula())) throw esin::error(MatriculaDuplicada);
@@ -52,8 +52,8 @@ void terminal::insereix_contenidor(const contenidor &c) {
 }
 
 /* retira_contenidor.
-   Pre: Cert.
-   Post: Elimina m de la terminal. Gestiona el moviment de contenidors superiors a l'espera.
+    Pre: Cert.
+    Post: Elimina m de la terminal. Gestiona el moviment de contenidors superiors a l'espera.
    Cost: O(H + E*N*M*H). */
 void terminal::retira_contenidor(const string &m) {
     if (!_conts.existeix(m)) throw esin::error(MatriculaInexistent);
@@ -87,8 +87,8 @@ void terminal::retira_contenidor(const string &m) {
 }
 
 /* on.
-   Pre: Cert.
-   Post: Retorna la ubicació de m.
+    Pre: Cert.
+    Post: Retorna la ubicació de m.
    Cost: O(1) mitjà. */
 ubicacio terminal::on(const string &m) const noexcept {
     if (!_conts.existeix(m)) return ubicacio(-1, -1, -1);
@@ -96,8 +96,8 @@ ubicacio terminal::on(const string &m) const noexcept {
 }
 
 /* longitud.
-   Pre: Cert.
-   Post: Retorna la longitud de m.
+    Pre: Cert.
+    Post: Retorna la longitud de m.
    Cost: O(1) mitjà. */
 nat terminal::longitud(const string &m) const {
     if (!_conts.existeix(m)) throw esin::error(MatriculaInexistent);
@@ -105,8 +105,8 @@ nat terminal::longitud(const string &m) const {
 }
 
 /* fragmentacio.
-   Pre: Cert.
-   Post: Retorna el comptador de fragmentació segons la definició de l'enunciat.
+    Pre: Cert.
+    Post: Retorna el comptador de fragmentació segons la definició de l'enunciat.
    Cost: O(N*M*H). */
 nat terminal::fragmentacio() const noexcept {
     nat frag = 0;
@@ -116,7 +116,7 @@ nat terminal::fragmentacio() const noexcept {
                 if (_graella[i][j][k] == "") {
                     bool lloc_20 = false;
                     if (j + 1 < _m && _graella[i][j+1][k] == "" && 
-                       (k == 0 || (_graella[i][j][k-1] != "" && _graella[i][j+1][k-1] != ""))) {
+                        (k == 0 || (_graella[i][j][k-1] != "" && _graella[i][j+1][k-1] != ""))) {
                         lloc_20 = true;
                     }
                     if (!lloc_20) frag++;
@@ -128,8 +128,8 @@ nat terminal::fragmentacio() const noexcept {
 }
 
 /* area_espera.
-   Pre: Cert.
-   Post: Llista matrícules d'espera ordenades alfabèticament.
+    Pre: Cert.
+    Post: Llista matrícules d'espera ordenades alfabèticament.
    Cost: O(E log E). */
 void terminal::area_espera(std::list<string> &l) const noexcept {
     l = _espera;

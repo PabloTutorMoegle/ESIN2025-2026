@@ -1,89 +1,69 @@
-# Makefile para compilar el proyecto gestterm
+# Opcions de compilaciÃ³
+OPCIONS = -O0 -c -Wall -ansi -g -std=c++11
 
-# Compilador y flags
-CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Wextra -O2
-LDFLAGS = -lesin
+# Path de la biblioteca
+LIB_PATH = /home/pablo/lib
 
-# Archivos fuente
-SOURCES = driver_gestterm.cpp contenidor.cpp terminal.cpp ubicacio.cpp
-HEADERS = contenidor.hpp terminal.hpp ubicacio.hpp cataleg.hpp
+# Biblioteca ESIN
+LDFLAGS = -L$(LIB_PATH) -lesin
 
-# Archivos objeto
-OBJECTS = $(SOURCES:.cpp=.o)
+# Executable final
+driver_gestterm.exe: driver_gestterm.o contenidor.o ubicacio.o terminal.o
+	g++ -o driver_gestterm.exe driver_gestterm.o contenidor.o ubicacio.o terminal.o $(LDFLAGS)
 
-# Nombre del ejecutable
-EXECUTABLE = gestterm
+driver_gestterm.o: driver_gestterm.cpp contenidor.hpp ubicacio.hpp terminal.hpp
+	g++ -c driver_gestterm.cpp $(OPCIONS)
 
-# Archivos de test
-TEST_INPUT = jp_public/jp_public.in
-TEST_OUTPUT = jp_public/jp_public.res
-ERROR_FILE = gestterm.err
+contenidor.o: contenidor.cpp contenidor.hpp
+	g++ -c contenidor.cpp $(OPCIONS)
 
-# Targets principales
-all: $(EXECUTABLE)
+ubicacio.o: ubicacio.cpp ubicacio.hpp
+	g++ -c ubicacio.cpp $(OPCIONS)
 
-# Compilar el ejecutable
-$(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-	@echo "✓ Compilación completada: $(EXECUTABLE)"
+terminal.o: terminal.cpp terminal.hpp cataleg.hpp contenidor.hpp ubicacio.hpp
+	g++ -c terminal.cpp $(OPCIONS)
 
-# Compilar archivos objeto
-%.o: %.cpp $(HEADERS)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-	@echo "  ✓ Compilado: $<"
-
-# Ejecutar los tests públicos
-test: $(EXECUTABLE)
-	@echo "Ejecutando tests públicos..."
-	@if [ -f "$(TEST_INPUT)" ]; then \
-		./$(EXECUTABLE) < $(TEST_INPUT) > output.txt; \
-		echo "Comparando resultado con archivo esperado..."; \
-		if diff -q output.txt $(TEST_OUTPUT) > /dev/null 2>&1; then \
-			echo "✓ TESTS PASSED"; \
-		else \
-			echo "✗ TESTS FAILED - Diferencias encontradas:"; \
-			diff output.txt $(TEST_OUTPUT) | head -20; \
-		fi; \
-	else \
-		echo "✗ No se encontró el archivo de test: $(TEST_INPUT)"; \
-	fi
-
-# Ejecutar con salida detallada para debugging
-test-verbose: $(EXECUTABLE)
-	@echo "Ejecutando tests con salida detallada..."
-	@if [ -f "$(TEST_INPUT)" ]; then \
-		./$(EXECUTABLE) < $(TEST_INPUT) > output.txt 2>&1; \
-		echo "Primeras 50 líneas de salida:"; \
-		head -50 output.txt; \
-		echo "\n--- Comparación con esperado ---"; \
-		diff output.txt $(TEST_OUTPUT) | head -30; \
-	else \
-		echo "✗ No se encontró el archivo de test: $(TEST_INPUT)"; \
-	fi
-
-# Limpiar archivos compilados
+# Neteja d'arxius temporals
 clean:
-	rm -f $(OBJECTS) $(EXECUTABLE) output.txt
-	@echo "✓ Archivos compilados eliminados"
+	rm -f *.o
+	rm -f *.exe
+	rm -f *.gch
+	rm -f diff*.txt
 
-# Limpiar todo incluyendo ejecutable
-distclean: clean
-	rm -f *.o $(EXECUTABLE)
-	@echo "✓ Limpieza completa realizada"
+# Regla per a fer els tests
+test: 
+	./driver_gestterm.exe < jp_public_contenidor.in | diff - jp_public_contenidor.res > diff_cont.txt
+	./driver_gestterm.exe < jp_public_ubicacio.in | diff - jp_public_ubicacio.res > diff_ubic.txt
+	./driver_gestterm.exe < jp_public_cataleg.in | diff - jp_public_cataleg.res > diff_cata.txt
 
-# Mostrar ayuda
-help:
-	@echo "Targets disponibles:"
-	@echo "  make all          - Compilar el programa (default)"
-	@echo "  make test         - Compilar y ejecutar tests públicos"
-	@echo "  make test-verbose - Ejecutar tests con salida detallada"
-	@echo "  make clean        - Eliminar archivos compilados"
-	@echo "  make distclean    - Eliminar todo lo compilado"
-	@echo "  make rebuild      - Limpiar y compilar de nuevo"
-	@echo "  make help         - Mostrar esta ayuda"
+# Tests mejorats del cataleg
+cataleg: driver_gestterm.exe
+	@echo "=== Executant tests públics de cataleg ==="
+	./driver_gestterm.exe < jp_public_cataleg.in | diff - jp_public_cataleg.res > diff_cata.txt && echo "✓ Tests públics CORRECTES" || echo "✗ Tests públics FALLAREN"
+	@echo ""
+	@echo "=== Executant tests enhanced de cataleg ==="
+	./driver_gestterm.exe < jp_public_cataleg_enhanced.in | diff - jp_public_cataleg_enhanced.res > diff_cata_enhanced.txt && echo "✓ Tests enhanced CORRECTES" || echo "✗ Tests enhanced FALLAREN"
+	@echo ""
+	@echo "=== Executant tests STRESS de cataleg (50 elements) ==="
+	@echo "=== Executant tests STRESS de cataleg (50 elements) ==="
+	./driver_gestterm.exe < jp_public_cataleg_stress.in | diff - jp_public_cataleg_stress.res > diff_cata_stress.txt && echo "✓ Tests STRESS CORRECTES" || echo "✗ Tests STRESS FALLAREN"
+	@echo ""
+	@echo "=== Executant tests STRESS gros (1.000 elements) ==="
+	./driver_gestterm.exe < jp_public_cataleg_stress_1000.in | diff - jp_public_cataleg_stress_1000.res > diff_cata_stress_1000.txt && echo "✓ Tests STRESS 1K CORRECTES" || echo "✗ Tests STRESS 1K FALLAREN"
+	@echo ""
+	@echo "=== Executant tests STRESS EXTREM (100.000 elements) ==="
+	./driver_gestterm.exe < jp_public_cataleg_stress_100k.in | diff - jp_public_cataleg_stress_100k.res > diff_cata_stress_100k.txt && echo "✓ Tests STRESS 100K CORRECTES" || echo "✗ Tests STRESS 100K FALLAREN"
+	@echo ""
+	@echo "=== Executant tests STRESS EXTREM de cataleg (1000 elements) ==="
+	./driver_gestterm.exe < jp_public_cataleg_stress_1000.in | diff - jp_public_cataleg_stress_1000.res > diff_cata_stress_1000.txt && echo "✓ Tests STRESS 1000 CORRECTES" || echo "✗ Tests STRESS 1000 FALLAREN"
+	@if [ -s diff_cata.txt ]; then echo "Diferències públics:"; cat diff_cata.txt; fi
+	@if [ -s diff_cata_enhanced.txt ]; then echo "Diferències enhanced:"; cat diff_cata_enhanced.txt; fi
+	@if [ -s diff_cata_stress.txt ]; then echo "Diferències stress:"; cat diff_cata_stress.txt; fi
+		@if [ -s diff_cata_stress_1000.txt ]; then echo "Diferències stress 1K:"; cat diff_cata_stress_1000.txt; fi
+		@if [ -s diff_cata_stress_100k.txt ]; then echo "Diferències stress 100K:"; cat diff_cata_stress_100k.txt; fi
+	@if [ -s diff_cata_stress_1000.txt ]; then echo "Diferències stress 1000:"; cat diff_cata_stress_1000.txt; fi
 
-# Recompilar desde cero
-rebuild: distclean all
-
-.PHONY: all test test-verbose clean distclean help rebuild
+# Si vols provar la classe terminal ho pots fer amb aquest metode, hauras de colocar un # en la primera linia si vols la diferencia amb la solucio o en la segona linia si vols la sortida amb el teu programa
+prova:
+	./driver_gestterm.exe < jp_public_terminal.in > diff_term.txt
+	./driver_gestterm.exe < jp_public_terminal.in | diff - jp_public_terminal.res > diff_term.txt

@@ -29,7 +29,7 @@ ostream& operator<<(ostream& os, const contenidor& c) {
 
 // funcions d'utilitat
 
-// imprimeix un booleà
+// imprimeix un booleï¿½
 ostream& operator<=(ostream& os, const bool b) {
   os << (b ? "true" : "false");
   return os;
@@ -478,7 +478,7 @@ int main(){
   d.add_call("retira_contenidor", tracta_retira_contenidor, "any", "string");
   d.add_call("mapa", tracta_mapa, "any");
   
-  // instal·lacio de tipus
+  // instalï¿½lacio de tipus
   d.install_type<contenidor>();
   d.install_type<ubicacio>();
   d.install_type<cataleg<int> >();

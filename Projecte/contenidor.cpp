@@ -1,10 +1,11 @@
 #include "contenidor.hpp"
 
+
 /* Constructora. 
-   Pre: Cert.
-   Post: Crea un contenidor amb matrícula m i longitud l.
-   Llença MatriculaIncorrecta si m és buida o conté caràcters no alfanumèrics (A-Z, 0-9).
-   Llença LongitudIncorrecta si l no és 10, 20 o 30.
+    Pre: Cert.
+    Post: Crea un contenidor amb matrícula m i longitud l.
+    Llença MatriculaIncorrecta si m és buida o conté caràcters no alfanumèrics (A-Z, 0-9).
+    Llença LongitudIncorrecta si l no és 10, 20 o 30.
    Cost: O(M) on M és la longitud de la matrícula (pel recorregut de validació). */
 contenidor::contenidor(const string &m, nat l) {
     if (m.empty()) {

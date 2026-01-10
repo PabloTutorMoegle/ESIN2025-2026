@@ -3,5 +3,5 @@
 */
 
 int fil;
-int placa; 
-int pis;   
+int plaza; 
+int piso;   

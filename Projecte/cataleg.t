@@ -1,8 +1,7 @@
-#include <esin/error>
 
 /* Constructora.
-   Pre: Cert.
-   Post: Crea un catàleg buit amb mida inicial numelems (mínim 1).
+    Pre: Cert.
+    Post: Crea un catàleg buit amb mida inicial numelems (mínim 1).
    Cost: O(M), on M és numelems. */
 template <typename Valor>
 cataleg<Valor>::cataleg(nat numelems) {
@@ -36,9 +35,9 @@ cataleg<Valor>::~cataleg() noexcept {
 }
 
 /* assig: Insereix o actualitza un parell clau-valor.
-   Pre: Cert.
-   Post: Si la clau k existia, s'actualitza el valor. Si no, s'insereix. 
-   Llença ClauStringBuit si k és buit.
+    Pre: Cert.
+    Post: Si la clau k existia, s'actualitza el valor. Si no, s'insereix. 
+    Llença ClauStringBuit si k és buit.
    Cost: Mitjà O(L + α), on L és la longitud de k i α el factor de càrrega. */
 template <typename Valor>
 void cataleg<Valor>::assig(const string &k, const Valor &v) {
@@ -102,7 +101,7 @@ bool cataleg<Valor>::existeix(const string &k) const noexcept {
 }
 
 /* operator[]: Retorna el valor associat a la clau.
-   Cost: Mitjà O(L + α). */
+    Cost: Mitjà O(L + α).*/ 
 template <typename Valor>
 Valor cataleg<Valor>::operator[](const string &k) const {
     if (k.empty()) throw esin::error(ClauInexistent);

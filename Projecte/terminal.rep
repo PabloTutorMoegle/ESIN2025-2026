@@ -21,3 +21,5 @@ bool buscar_lloc(const contenidor &c, ubicacio &u) const;
 bool es_pot_posar(nat f, nat p, nat k, nat ll) const;
 void gestionar_espera();
 void moure_a_espera(const string &m);
+void col_locar_al_moll(const contenidor &c, const ubicacio &u);
+void esborrar_del_moll(const string &m);
