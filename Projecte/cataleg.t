@@ -1,3 +1,9 @@
+#include <esin/error>
+#include <esin/util>
+
+namespace esin {
+    using ::error;
+}
 
 /* Constructora.
     Pre: Cert.

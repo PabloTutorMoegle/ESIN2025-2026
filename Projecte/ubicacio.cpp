@@ -1,4 +1,10 @@
 #include "ubicacio.hpp"
+#include <esin/error>
+#include <esin/util>
+
+namespace esin {
+    using ::error;
+}
 
 /* Constructora. Crea la ubicació <i, j, k>. 
     Pre: Cert.

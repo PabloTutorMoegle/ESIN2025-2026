@@ -21,6 +21,55 @@ terminal::terminal(nat n, nat m, nat h, estrategia st) :
     }
 }
 
+/* Constructor de còpia.
+   Cost: O(N*M*H). */
+terminal::terminal(const terminal& b) : 
+    _n(b._n), _m(b._m), _h(b._h), _st(b._st), 
+    _espera(b._espera), _on(b._on), _conts(b._conts), _ops_grua(b._ops_grua) {
+    
+    _graella = new string**[_n];
+    for (nat i = 0; i < _n; ++i) {
+        _graella[i] = new string*[_m];
+        for (nat j = 0; j < _m; ++j) {
+            _graella[i][j] = new string[_h];
+            for (nat k = 0; k < _h; ++k) {
+                _graella[i][j][k] = b._graella[i][j][k];
+            }
+        }
+    }
+}
+
+/* Operador d'assignació.
+   Cost: O(N*M*H). */
+terminal& terminal::operator=(const terminal& b) {
+    if (this != &b) {
+        // Alliberem memòria antiga
+        for (nat i = 0; i < _n; ++i) {
+            for (nat j = 0; j < _m; ++j) delete[] _graella[i][j];
+            delete[] _graella[i];
+        }
+        delete[] _graella;
+
+        // Copiem dades simples
+        _n = b._n; _m = b._m; _h = b._h; _st = b._st;
+        _espera = b._espera; _on = b._on; _conts = b._conts;
+        _ops_grua = b._ops_grua;
+
+        // Reservem i copiem la nova graella
+        _graella = new string**[_n];
+        for (nat i = 0; i < _n; ++i) {
+            _graella[i] = new string*[_m];
+            for (nat j = 0; j < _m; ++j) {
+                _graella[i][j] = new string[_h];
+                for (nat k = 0; k < _h; ++k) {
+                    _graella[i][j][k] = b._graella[i][j][k];
+                }
+            }
+        }
+    }
+    return *this;
+}
+
 /* Destructora.
     Pre: Cert.
     Post: Allibera la memòria dinàmica de la graella 3D.
@@ -102,6 +151,20 @@ ubicacio terminal::on(const string &m) const noexcept {
 nat terminal::longitud(const string &m) const {
     if (!_conts.existeix(m)) throw esin::error(MatriculaInexistent);
     return _conts[m].longitud();
+}
+
+/* contenidor_ocupa.
+   Pre: Cert.
+   Post: Si u és una ubicació del magatzem, m conté la matrícula del contenidor que l'ocupa 
+         (cadena buida si no n'hi ha cap). Si no, llança UbicacioNoMagatzem.
+   Cost: O(1). */
+void terminal::contenidor_ocupa(const ubicacio &u, string &m) const {
+    if (static_cast<nat>(u.filera()) >= _n || 
+    static_cast<nat>(u.placa()) >= _m || 
+    static_cast<nat>(u.pis()) >= _h) {
+        throw esin::error(UbicacioNoMagatzem);
+    }
+    m = _graella[u.filera()][u.placa()][u.pis()];
 }
 
 /* fragmentacio.
