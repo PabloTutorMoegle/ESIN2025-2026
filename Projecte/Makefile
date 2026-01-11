@@ -1,5 +1,5 @@
 # Opcions de compilaciÃ³
-OPCIONS = -O0 -c -Wall -ansi -g -std=c++11
+OPCIONS = -O0 -c -Wall -g -std=c++11
 
 # Path de la biblioteca
 LIB_PATH = /home/pablo/lib
