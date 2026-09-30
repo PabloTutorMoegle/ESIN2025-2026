@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/pablo/Documents/GitHub/ESIN2025-2026/Jutge",
-      "program": "/home/pablo/Documents/GitHub/ESIN2025-2026/Jutge/build/Debug/outDebug",
+      "cwd": "/home/pablo/Documents/GitHub/ESIN2025-2026/Jutge/Stacks/X21635_ca",
+      "program": "/home/pablo/Documents/GitHub/ESIN2025-2026/Jutge/Stacks/X21635_ca/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
